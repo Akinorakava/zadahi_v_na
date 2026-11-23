@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Теория: задачи на «в … раз» и «на … больше/меньше»</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    background: #f0f4f8;
+    margin: 0;
+    padding: 20px;
+    color: #1e293b;
+    line-height: 1.6;
+  }
+  .container { max-width: 860px; margin: 0 auto; }
+  h1 {
+    text-align: center;
+    color: #1e40af;
+    font-size: 26px;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #64748b;
+    margin-bottom: 24px;
+    font-size: 15px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 22px 26px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    border-left: 5px solid #3b82f6;
+  }
+  .card.green { border-left-color: #22c55e; }
+  .card.orange { border-left-color: #f59e0b; }
+  .card.purple { border-left-color: #8b5cf6; }
+  .card.red { border-left-color: #ef4444; }
+  .card h2 {
+    margin-top: 0;
+    color: #1e40af;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card h3 {
+    color: #334155;
+    font-size: 16px;
+    margin: 18px 0 8px;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #3b82f6;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .card.green .badge { background: #22c55e; }
+  .card.orange .badge { background: #f59e0b; }
+  .card.purple .badge { background: #8b5cf6; }
+  .card.red .badge { background: #ef4444; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 15px;
+  }
+  th, td {
+    border: 1px solid #cbd5e1;
+    padding: 10px 12px;
+    text-align: left;
+  }
+  th { background: #eff6ff; color: #1e3a8a; font-weight: 600; }
+  td.center, th.center { text-align: center; }
+  tr:nth-child(even) td { background: #f8fafc; }
+
+  .formula {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 12px 0;
+    font-size: 16px;
+    color: #1e3a8a;
+    text-align: center;
+  }
+  .formula b { color: #1e40af; font-size: 17px; }
+
+  .example {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin: 14px 0;
+  }
+  .example-title {
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .example-title .tag {
+    background: #dbeafe;
+    color: #1e40af;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .step {
+    display: flex;
+    gap: 10px;
+    margin: 6px 0;
+    font-size: 15px;
+  }
+  .step .n {
+    color: #3b82f6;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .answer-line {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed #cbd5e1;
+    font-weight: 700;
+    color: #15803d;
+  }
+  .warn {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 14px 0;
+    color: #92400e;
+    font-size: 15px;
+  }
+  .warn b { color: #b45309; }
+  .error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 14px 0;
+    color: #991b1b;
+    font-size: 15px;
+  }
+  .error b { color: #b91c1c; }
+  .good {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 14px 0;
+    color: #166534;
+    font-size: 15px;
+  }
+  .good b { color: #15803d; }
+
+  .nav-link {
+    display: block;
+    text-align: center;
+    background: #1e40af;
+    color: #fff;
+    text-decoration: none;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 700;
+    margin: 26px 0 10px;
+    transition: background 0.2s;
+  }
+  .nav-link:hover { background: #1e3a8a; }
+
+  ul { margin: 8px 0; padding-left: 22px; }
+  li { margin: 6px 0; }
+  .em { color: #1e40af; font-weight: 600; }
+  .hl { background: #fef9c3; padding: 1px 5px; border-radius: 4px; font-weight: 600; }
+
+  /* ===== интерактивные мини-примеры ===== */
+  .interactive {
+    background: #f1f5f9;
+    border: 1px dashed #94a3b8;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 12px 0;
+  }
+  .interactive .task-q {
+    font-size: 15px;
+    margin-bottom: 10px;
+    color: #0f172a;
+  }
+  .interactive .task-q b { color: #1e40af; }
+
+  .btn-reveal, .btn-check, .btn-reset {
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-reveal {
+    background: #3b82f6;
+    color: #fff;
+  }
+  .btn-reveal:hover { background: #2563eb; }
+  .btn-check {
+    background: #22c55e;
+    color: #fff;
+  }
+  .btn-check:hover { background: #16a34a; }
+  .btn-check:disabled { background: #94a3b8; cursor: default; }
+  .btn-reset {
+    background: #e2e8f0;
+    color: #334155;
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+  .btn-reset:hover { background: #cbd5e1; }
+
+  .reveal-box {
+    display: none;
+    margin-top: 12px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .reveal-box.show { display: block; }
+  .reveal-box .step {
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.35s, transform 0.35s;
+  }
+  .reveal-box .step.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .mini-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .mini-input-row input {
+    flex: 1;
+    min-width: 110px;
+    padding: 8px 10px;
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+  }
+  .mini-input-row input:focus { border-color: #3b82f6; }
+  .mini-input-row input:disabled { background: #f1f5f9; }
+
+  .mini-result {
+    margin-top: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    display: none;
+  }
+  .mini-result.show { display: block; }
+  .mini-result.ok { color: #15803d; }
+  .mini-result.bad { color: #b91c1c; }
+
+  .mini-hint {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 6px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Теория: задачи на «в … раз» и «на … больше/меньше»</h1>
+  <p class="subtitle">Как понять условие, выбрать действие и не перепутать «в» и «на»</p>
+
+  <!-- ================= 1. ГЛАВНОЕ ПРАВИЛО ================= -->
+  <div class="card">
+    <h2><span class="badge">1</span> Главное правило: «в» или «на»?</h2>
+    <p>Всё зависит от <b>предлога</b> перед словом «больше» или «меньше»:</p>
+    <table>
+      <tr>
+        <th>В условии сказано</th>
+        <th class="center">Действие</th>
+        <th class="center">Пример</th>
+        <th class="center">Результат</th>
+      </tr>
+      <tr>
+        <td>«<span class="em">в</span> 3 раза больше»</td>
+        <td class="center">× 3</td>
+        <td class="center">8 яблок в 3 раза больше</td>
+        <td class="center">8 × 3 = 24</td>
+      </tr>
+      <tr>
+        <td>«<span class="em">в</span> 3 раза меньше»</td>
+        <td class="center">÷ 3</td>
+        <td class="center">24 яблока в 3 раза меньше</td>
+        <td class="center">24 ÷ 3 = 8</td>
+      </tr>
+      <tr>
+        <td>«<span class="em">на</span> 5 больше»</td>
+        <td class="center">+ 5</td>
+        <td class="center">8 яблок на 5 больше</td>
+        <td class="center">8 + 5 = 13</td>
+      </tr>
+      <tr>
+        <td>«<span class="em">на</span> 5 меньше»</td>
+        <td class="center">− 5</td>
+        <td class="center">13 яблок на 5 меньше</td>
+        <td class="center">13 − 5 = 8</td>
+      </tr>
+    </table>
+    <div class="formula">
+      <b>«в … раз» → умножение или деление</b><br>
+      <b>«на …» → сложение или вычитание</b>
+    </div>
+    <div class="warn">
+      <b>Почему путаются:</b> в обоих случаях звучит «больше/меньше». Но «в 3 раза больше» — это про <b>размер</b> (во сколько раз), а «на 5 больше» — это про <b>разницу</b> (на сколько). Держи в голове: <span class="hl">«в» — умножаю/делю, «на» — прибавляю/вычитаю</span>.
+    </div>
+
+    <!-- мини-пример 1 -->
+    <div class="interactive" data-answer="21" data-unit="конфет">
+      <div class="task-q"><b>Попробуй сам:</b> У Ани 7 конфет. У Оли — в 3 раза больше. Сколько конфет у Оли?</div>
+      <div class="mini-input-row">
+        <input type="text" placeholder="Твой ответ..." data-mini-input>
+        <button class="btn-check" data-mini-check>Проверить</button>
+        <button class="btn-reveal" data-mini-reveal>Показать решение</button>
+        <button class="btn-reset" data-mini-reset>Сброс</button>
+      </div>
+      <div class="mini-result" data-mini-result></div>
+      <div class="reveal-box" data-mini-box>
+        <div class="step"><span class="n">1.</span><span>«В 3 раза больше» → умножаем на 3.</span></div>
+        <div class="step"><span class="n">2.</span><span>7 × 3 = <b>21</b> конфета.</span></div>
+        <div class="answer-line">Ответ: у Оли 21 конфета.</div>
+      </div>
+      <div class="mini-hint">Подсказка: «в … раз больше» — это умножение.</div>
+    </div>
+  </div>
+
+  <!-- ================= 2. КТО С КЕМ СРАВНИВАЕТСЯ ================= -->
+  <div class="card green">
+    <h2><span class="badge">2</span> Шаг перед решением: кто с кем сравнивается?</h2>
+    <p>Почти все ошибки — не в арифметике, а в том, что ученик <b>не понял, от какого числа считать</b>. Поэтому перед действием всегда выписывай:</p>
+    <div class="formula">
+      «Сравнивают <b>ВТОРОЕ</b> с <b>ПЕРВЫМ</b>» → значит, считаем <b>от первого</b>.
+    </div>
+    <div class="example">
+      <div class="example-title"><span class="tag">пример</span> «У Маши 8 наклеек, а у Пети — в 2 раза меньше»</div>
+      <div class="step"><span class="n">1.</span><span>С кем сравнивают Петю? <b>С Машей</b>.</span></div>
+      <div class="step"><span class="n">2.</span><span>Сколько у Маши? <b>8</b>. Значит, считаем от 8.</span></div>
+      <div class="step"><span class="n">3.</span><span>«В 2 раза меньше» → делим: 8 ÷ 2 = <b>4</b>.</span></div>
+      <div class="answer-line">Ответ: у Пети 4 наклейки.</div>
+    </div>
+    <div class="warn">
+      <b>Опасная формулировка:</b> «Второй ящик <b>в 3 раза больше</b>, чем первый». Здесь сравнивают <b>второй</b> с <b>первым</b>, поэтому считаем от <b>первого</b>: второй = первый × 3. Не наоборот!
+    </div>
+
+    <!-- мини-пример 2 -->
+    <div class="interactive" data-answer="6" data-unit="кг">
+      <div class="task-q"><b>Попробуй сам:</b> В первом ящике 12 кг яблок. Во втором — в 2 раза меньше, чем в первом. Сколько кг во втором ящике?</div>
+      <div class="mini-input-row">
+        <input type="text" placeholder="Твой ответ..." data-mini-input>
+        <button class="btn-check" data-mini-check>Проверить</button>
+        <button class="btn-reveal" data-mini-reveal>Показать решение</button>
+        <button class="btn-reset" data-mini-reset>Сброс</button>
+      </div>
+      <div class="mini-result" data-mini-result></div>
+      <div class="reveal-box" data-mini-box>
+        <div class="step"><span class="n">1.</span><span>С кем сравнивают второй ящик? <b>С первым</b>.</span></div>
+        <div class="step"><span class="n">2.</span><span>В первом 12 кг — от него и считаем.</span></div>
+        <div class="step"><span class="n">3.</span><span>«В 2 раза меньше» → 12 ÷ 2 = <b>6</b> кг.</span></div>
+        <div class="answer-line">Ответ: во втором ящике 6 кг.</div>
+      </div>
+      <div class="mini-hint">Подсказка: «в 2 раза меньше, чем в первом» — делим число из первого.</div>
+    </div>
+  </div>
+
+  <!-- ================= 3. ОБРАТНЫЕ ЗАДАЧИ ================= -->
+  <div class="card orange">
+    <h2><span class="badge">3</span> Обратные задачи: «это в 3 раза больше, чем…»</h2>
+    <p>Бывает, что известно <b>большее</b> число, а найти нужно <b>меньшее</b>. Тогда действие меняется на противоположное:</p>
+    <table>
+      <tr>
+        <th>Что известно</th>
+        <th class="center">Что найти</th>
+        <th class="center">Действие</th>
+      </tr>
+      <tr>
+        <td>Большее, и сказано «в 3 раза больше»</td>
+        <td class="center">меньшее</td>
+        <td class="center">÷ 3</td>
+      </tr>
+      <tr>
+        <td>Меньшее, и сказано «в 3 раза меньше»</td>
+        <td class="center">большее</td>
+        <td class="center">× 3</td>
+      </tr>
+      <tr>
+        <td>Большее, и сказано «на 5 больше»</td>
+        <td class="center">меньшее</td>
+        <td class="center">− 5</td>
+      </tr>
+      <tr>
+        <td>Меньшее, и сказано «на 5 меньше»</td>
+        <td class="center">большее</td>
+        <td class="center">+ 5</td>
+      </tr>
+    </table>
+    <div class="example">
+      <div class="example-title"><span class="tag">пример</span> «Во втором ящике 15 кг груш, это в 3 раза больше, чем в первом. Сколько в первом?»</div>
+      <div class="step"><span class="n">1.</span><span>15 кг — это <b>большее</b> число (второй ящик).</span></div>
+      <div class="step"><span class="n">2.</span><span>Оно <b>в 3 раза больше</b> первого, значит первое <b>в 3 раза меньше</b>.</span></div>
+      <div class="step"><span class="n">3.</span><span>15 ÷ 3 = <b>5</b> кг.</span></div>
+      <div class="answer-line">Ответ: в первом ящике 5 кг.</div>
+    </div>
+
+    <!-- мини-пример 3 -->
+    <div class="interactive" data-answer="7" data-unit="марок">
+      <div class="task-q"><b>Попробуй сам:</b> У Саши 28 марок, это в 4 раза больше, чем у Коли. Сколько марок у Коли?</div>
+      <div class="mini-input-row">
+        <input type="text" placeholder="Твой ответ..." data-mini-input>
+        <button class="btn-check" data-mini-check>Проверить</button>
+        <button class="btn-reveal" data-mini-reveal>Показать решение</button>
+        <button class="btn-reset" data-mini-reset>Сброс</button>
+      </div>
+      <div class="mini-result" data-mini-result></div>
+      <div class="reveal-box" data-mini-box>
+        <div class="step"><span class="n">1.</span><span>28 — это <b>большее</b> число (у Саши).</span></div>
+        <div class="step"><span class="n">2.</span><span>Оно в 4 раза больше, чем у Коли, значит у Коли <b>в 4 раза меньше</b>.</span></div>
+        <div class="step"><span class="n">3.</span><span>28 ÷ 4 = <b>7</b> марок.</span></div>
+        <div class="answer-line">Ответ: у Коли 7 марок.</div>
+      </div>
+      <div class="mini-hint">Подсказка: «это в 4 раза больше, чем…» — известное число делим на 4.</div>
+    </div>
+  </div>
+
+  <!-- ================= 4. ВО СКОЛЬКО РАЗ / НА СКОЛЬКО ================= -->
+  <div class="card purple">
+    <h2><span class="badge">4</span> «Во сколько раз больше?» и «На сколько больше?»</h2>
+    <p>Это вопросы-<b>сравнения</b>. Их часто путают с «в … раз больше» из условия. Разница такая:</p>
+    <table>
+      <tr>
+        <th>Вопрос</th>
+        <th class="center">Что делаем</th>
+        <th class="center">Пример</th>
+      </tr>
+      <tr>
+        <td>«Во сколько раз больше?»</td>
+        <td class="center">большее ÷ меньшее</td>
+        <td class="center">24 и 8 → 24 ÷ 8 = 3 (в 3 раза)</td>
+      </tr>
+      <tr>
+        <td>«На сколько больше?»</td>
+        <td class="center">большее − меньшее</td>
+        <td class="center">24 и 8 → 24 − 8 = 16 (на 16)</td>
+      </tr>
+    </table>
+    <div class="good">
+      <b>Проверка на здравый смысл:</b> «во сколько раз» — ответ обычно <b>небольшое число</b> (2, 3, 5…), а «на сколько» — может быть <b>любым</b>. Если получилось «в 40 раз больше» там, где ждали разницу, — скорее всего, перепутано действие.
+    </div>
+
+    <!-- мини-пример 4 -->
+    <div class="interactive" data-answer="9" data-unit="">
+      <div class="task-q"><b>Попробуй сам:</b> В одном классе 27 учеников, в другом — 9. <b>На сколько</b> учеников больше в первом классе?</div>
+      <div class="mini-input-row">
+        <input type="text" placeholder="Твой ответ..." data-mini-input>
+        <button class="btn-check" data-mini-check>Проверить</button>
+        <button class="btn-reveal" data-mini-reveal>Показать решение</button>
+        <button class="btn-reset" data-mini-reset>Сброс</button>
+      </div>
+      <div class="mini-result" data-mini-result></div>
+      <div class="reveal-box" data-mini-box>
+        <div class="step"><span class="n">1.</span><span>Вопрос «на сколько больше?» → вычитаем.</span></div>
+        <div class="step"><span class="n">2.</span><span>27 − 9 = <b>18</b> учеников.</span></div>
+        <div class="answer-line">Ответ: на 18 учеников больше.</div>
+      </div>
+      <div class="mini-hint">Подсказка: «на сколько» — разность (вычитание).</div>
+    </div>
+
+    <!-- мини-пример 5 -->
+    <div class="interactive" data-answer="3" data-unit="раза">
+      <div class="task-q"><b>Попробуй сам:</b> В одном классе 27 учеников, в другом — 9. <b>Во сколько раз</b> больше учеников в первом классе?</div>
+      <div class="mini-input-row">
+        <input type="text" placeholder="Твой ответ..." data-mini-input>
+        <button class="btn-check" data-mini-check>Проверить</button>
+        <button class="btn-reveal" data-mini-reveal>Показать решение</button>
+        <button class="btn-reset" data-mini-reset>Сброс</button>
+      </div>
+      <div class="mini-result" data-mini-result></div>
+      <div class="reveal-box" data-mini-box>
+        <div class="step"><span class="n">1.</span><span>Вопрос «во сколько раз больше?» → делим большее на меньшее.</span></div>
+        <div class="step"><span class="n">2.</span><span>27 ÷ 9 = <b>3</b>.</span></div>
+        <div class="answer-line">Ответ: в 3 раза больше.</div>
+      </div>
+      <div class="mini-hint">Подсказка: «во сколько раз» — частное (деление).</div>
+    </div>
+  </div>
+
+  <!-- ================= 5. ТИПОВАЯ ЗАДАЧА В 2 ДЕЙСТВИЯ ================= -->
+  <div class="card red">
+    <h2><span class="badge">5</span> Типовая задача в 2 действия</h2>
+    <p>В усложнённых задачах сначала находят одно число, а потом от него — второе. Порядок такой:</p>
+    <div class="formula">
+      <b>1)</b> найти промежуточное число → <b>2)</b> от него найти искомое → <b>3)</b> ответить на вопрос задачи
+    </div>
+    <div class="example">
+      <div class="example-title"><span class="tag">пример</span> «У Пети 8 конфет. У Васи — в 3 раза больше, чем у Пети. У Миши — на 6 конфет меньше, чем у Васи. Сколько конфет у Миши?»</div>
+      <div class="step"><span class="n">1.</span><span>Вася: «в 3 раза больше» от Пети → 8 × 3 = <b>24</b>.</span></div>
+      <div class="step"><span class="n">2.</span><span>Миша: «на 6 меньше» от Васи → 24 − 6 = <b>18</b>.</span></div>
+      <div class="answer-line">Ответ: у Миши 18 конфет.</div>
+    </div>
+    <div class="example">
+      <div class="example-title"><span class="tag">пример</span> «Книга 420 руб. Тетрадь — в 7 раз дешевле книги. Альбом — на 35 руб. дороже тетради. Сколько стоят все вместе?»</div>
+      <div class="step"><span class="n">1.</span><span>Тетрадь: 420 ÷ 7 = <b>60</b> руб.</span></div>
+      <div class="step"><span class="n">2.</span><span>Альбом: 60 + 35 = <b>95</b> руб.</span></div>
+      <div class="step"><span class="n">3.</span><span>Вместе: 420 + 60 + 95 = <b>575</b> руб.</span></div>
+      <div class="answer-line">Ответ: 575 рублей.</div>
+    </div>
+    <div class="warn">
+      <b>Частая ошибка:</b> посчитать только промежуточное число и записать его в ответ. Всегда перечитывай <b>последний вопрос</b> задачи: «сколько у Миши?» ≠ «сколько у Васи?».
+    </div>
+
+    <!-- мини-пример 6 -->
+    <div class="interactive" data-answer="11" data-unit="конфет">
+      <div class="task-q"><b>Попробуй сам:</b> У Пети 6 конфет. У Васи — в 2 раза больше, чем у Пети. У Миши — на 1 конфету меньше, чем у Васи. Сколько конфет у Миши?</div>
+      <div class="mini-input-row">
+        <input type="text" placeholder="Твой ответ..." data-mini-input>
+        <button class="btn-check" data-mini-check>Проверить</button>
+        <button class="btn-reveal" data-mini-reveal>Показать решение</button>
+        <button class="btn-reset" data-mini-reset>Сброс</button>
+      </div>
+      <div class="mini-result" data-mini-result></div>
+      <div class="reveal-box" data-mini-box>
+        <div class="step"><span class="n">1.</span><span>Вася: 6 × 2 = <b>12</b> конфет.</span></div>
+        <div class="step"><span class="n">2.</span><span>Миша: 12 − 1 = <b>11</b> конфет.</span></div>
+        <div class="answer-line">Ответ: у Миши 11 конфет.</div>
+      </div>
+      <div class="mini-hint">Подсказка: сначала находим Васю, потом от него — Мишу.</div>
+    </div>
+
+    <!-- мини-пример 7 -->
+    <div class="interactive" data-answer="95" data-unit="руб.">
+      <div class="task-q"><b>Попробуй сам:</b> Книга стоит 200 руб. Тетрадь — в 4 раза дешевле книги. Альбом — на 45 руб. дороже тетради. Сколько стоит альбом?</div>
+      <div class="mini-input-row">
+        <input type="text" placeholder="Твой ответ..." data-mini-input>
+        <button class="btn-check" data-mini-check>Проверить</button>
+        <button class="btn-reveal" data-mini-reveal>Показать решение</button>
+        <button class="btn-reset" data-mini-reset>Сброс</button>
+      </div>
+      <div class="mini-result" data-mini-result></div>
+      <div class="reveal-box" data-mini-box>
+        <div class="step"><span class="n">1.</span><span>Тетрадь: 200 ÷ 4 = <b>50</b> руб.</span></div>
+        <div class="step"><span class="n">2.</span><span>Альбом: 50 + 45 = <b>95</b> руб.</span></div>
+        <div class="answer-line">Ответ: альбом стоит 95 рублей.</div>
+      </div>
+      <div class="mini-hint">Подсказка: «в 4 раза дешевле» — делим на 4; «на 45 дороже» — прибавляем 45.</div>
+    </div>
+  </div>
+
+  <!-- ================= 6. АЛГОРИТМ ================= -->
+  <div class="card">
+    <h2><span class="badge">6</span> Алгоритм решения любой такой задачи</h2>
+    <ol>
+      <li><b>Прочитай условие дважды.</b> Подчеркни слова «в … раз» и «на …».</li>
+      <li><b>Выпиши, кто с кем сравнивается</b> («второй с первым», «Миша с Васей»).</li>
+      <li><b>Определи, что известно</b> — большее или меньшее число.</li>
+      <li><b>Выбери действие</b> по таблице из пункта 1 (и с учётом обратности из пункта 3).</li>
+      <li><b>Посчитай</b> и подпиши единицы (кг, руб., конфет).</li>
+      <li><b>Перечитай вопрос</b> задачи и проверь, на него ли ты ответил.</li>
+      <li><b>Проверь на здравый смысл:</b> «в 3 раза больше» должно дать число больше исходного; «на 5 меньше» — меньше.</li>
+    </ol>
+    <div class="good">
+      <b>Лайфхак для проверки:</b> подставь ответ обратно в условие. Если «у Миши на 6 меньше, чем у Васи», а у Миши 18, у Васи 24 — то 24 − 18 = 6. Сходится — значит, верно.
+    </div>
+  </div>
+
+  <!-- ================= 7. СЛОВАРИК ================= -->
+  <div class="card green">
+    <h2><span class="badge">7</span> Словарик формулировок</h2>
+    <table>
+      <tr>
+        <th>Фраза в задаче</th>
+        <th>Что она значит</th>
+      </tr>
+      <tr><td>«в 3 раза больше»</td><td>умножить на 3</td></tr>
+      <tr><td>«в 3 раза меньше»</td><td>разделить на 3</td></tr>
+      <tr><td>«в 3 раза дешевле»</td><td>разделить цену на 3</td></tr>
+      <tr><td>«в 3 раза дороже»</td><td>умножить цену на 3</td></tr>
+      <tr><td>«на 5 больше»</td><td>прибавить 5</td></tr>
+      <tr><td>«на 5 меньше»</td><td>вычесть 5</td></tr>
+      <tr><td>«это в 3 раза больше, чем…»</td><td>известно большее; меньшее = известное ÷ 3</td></tr>
+      <tr><td>«это на 5 меньше, чем…»</td><td>известно меньшее; большее = известное + 5</td></tr>
+      <tr><td>«во сколько раз больше?»</td><td>большее ÷ меньшее</td></tr>
+      <tr><td>«на сколько больше?»</td><td>большее − меньшее</td></tr>
+      <tr><td>«в 2 раза быстрее»</td><td>тратит в 2 раза меньше времени (÷ 2)</td></tr>
+      <tr><td>«в 2 раза медленнее»</td><td>тратит в 2 раза больше времени (× 2)</td></tr>
+    </table>
+    <div class="error">
+      <b>Осторожно со временем и скоростью!</b> «В 2 раза быстрее» — значит, время <b>меньше</b> в 2 раза, а скорость <b>больше</b> в 2 раза. Это единственное место, где «быстрее» = «меньше времени». Проговаривай это отдельно.
+    </div>
+  </div>
+
+  <a class="nav-link" href="tasks.html">Перейти к тренажёру с задачами →</a>
+
+</div>
+
+<script>
+/* ================= ИНТЕРАКТИВНЫЕ МИНИ-ПРИМЕРЫ ================= */
+document.querySelectorAll('.interactive').forEach(function(card) {
+  const input   = card.querySelector('[data-mini-input]');
+  const check   = card.querySelector('[data-mini-check]');
+  const reveal  = card.querySelector('[data-mini-reveal]');
+  const reset   = card.querySelector('[data-mini-reset]');
+  const result  = card.querySelector('[data-mini-result]');
+  const box     = card.querySelector('[data-mini-box]');
+  const correct = parseFloat(card.dataset.answer);
+  const unit    = card.dataset.unit || '';
+  let solved = false;
+
+  /* извлекаем число из ввода: "21", "21 конфета", "2,5" */
+  function parseAnswer(str) {
+    if (!str) return null;
+    let s = String(str).trim().replace(',', '.');
+    const frac = s.match(/^(-?\d+(?:\.\d+)?)\s*\/\s*(-?\d+(?:\.\d+)?)/);
+    if (frac) {
+      const a = parseFloat(frac[1]), b = parseFloat(frac[2]);
+      if (b !== 0) return a / b;
+    }
+    const num = s.match(/-?\d+(?:\.\d+)?/);
+    return num ? parseFloat(num[0]) : null;
+  }
+
+  /* показать решение по шагам с анимацией */
+  function revealSolution(instant) {
+    box.classList.add('show');
+    const steps = box.querySelectorAll('.step');
+    if (instant) {
+      steps.forEach(s => s.classList.add('visible'));
+      return;
+    }
+    steps.forEach((s, i) => {
+      setTimeout(() => s.classList.add('visible'), 120 * i);
+    });
+  }
+
+  check.addEventListener('click', function() {
+    if (solved) return;
+    const val = parseAnswer(input.value);
+    if (val === null) {
+      result.className = 'mini-result show bad';
+      result.textContent = '⚠️ Введи число.';
+      return;
+    }
+    const ok = Math.abs(val - correct) < 0.01;
+    if (ok) {
+      solved = true;
+      input.disabled = true;
+      check.disabled = true;
+      result.className = 'mini-result show ok';
+      result.textContent = '✅ Верно! ' + (unit ? correct + ' ' + unit : correct) + '.';
+      revealSolution(false);
+    } else {
+      result.className = 'mini-result show bad';
+      result.textContent = '❌ Пока неверно. Попробуй ещё раз или нажми «Показать решение».';
+    }
+  });
+
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') check.click();
+  });
+
+  reveal.addEventListener('click', function() {
+    revealSolution(false);
+  });
+
+  reset.addEventListener('click', function() {
+    solved = false;
+    input.disabled = false;
+    check.disabled = false;
+    input.value = '';
+    result.className = 'mini-result';
+    result.textContent = '';
+    box.classList.remove('show');
+    box.querySelectorAll('.step').forEach(s => s.classList.remove('visible'));
+    input.focus();
+  });
+});
+</script>
+</body>
+</html>

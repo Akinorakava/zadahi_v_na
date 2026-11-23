@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Задачи на «в … раз» и «на … больше/меньше»</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    background: #f0f4f8;
+    margin: 0;
+    padding: 20px;
+    color: #1e293b;
+  }
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  h1 {
+    text-align: center;
+    color: #1e40af;
+    font-size: 26px;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #64748b;
+    margin-bottom: 24px;
+    font-size: 15px;
+  }
+  .task {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    border-left: 5px solid #3b82f6;
+    transition: border-color 0.3s;
+  }
+  .task.correct { border-left-color: #22c55e; }
+  .task.wrong { border-left-color: #ef4444; }
+  .task-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .task-num {
+    background: #3b82f6;
+    color: #fff;
+    font-weight: bold;
+    min-width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .task.correct .task-num { background: #22c55e; }
+  .task.wrong .task-num { background: #ef4444; }
+  .task-text {
+    font-size: 16px;
+    line-height: 1.5;
+    padding-top: 3px;
+  }
+  .answer-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .answer-row label {
+    font-size: 15px;
+    color: #475569;
+  }
+  input[type="text"] {
+    flex: 1;
+    min-width: 120px;
+    padding: 9px 12px;
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input[type="text"]:focus { border-color: #3b82f6; }
+  input[type="text"]:disabled { background: #f1f5f9; color: #475569; }
+  .task.correct input[type="text"] { border-color: #22c55e; background: #f0fdf4; }
+  .task.wrong input[type="text"] { border-color: #ef4444; background: #fef2f2; }
+  .check-btn {
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .check-btn:hover { background: #2563eb; }
+  .check-btn:disabled { background: #94a3b8; cursor: default; }
+  .result {
+    margin-top: 12px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 15px;
+    line-height: 1.6;
+    display: none;
+  }
+  .result.show { display: block; }
+  .result.ok { background: #f0fdf4; border: 1px solid #86efac; }
+  .result.bad { background: #fef2f2; border: 1px solid #fca5a5; }
+  .result .verdict { font-weight: 700; margin-bottom: 6px; display: block; }
+  .result.ok .verdict { color: #15803d; }
+  .result.bad .verdict { color: #b91c1c; }
+  .result .solution {
+    color: #334155;
+    white-space: pre-line;
+  }
+  .result .solution b { color: #0f172a; }
+  .finish-btn {
+    display: block;
+    width: 100%;
+    background: #1e40af;
+    color: #fff;
+    border: none;
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    margin: 24px 0;
+    transition: background 0.2s;
+  }
+  .finish-btn:hover { background: #1e3a8a; }
+  .summary {
+    display: none;
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    margin-bottom: 20px;
+  }
+  .summary.show { display: block; }
+  .summary h2 {
+    margin-top: 0;
+    color: #1e40af;
+    font-size: 22px;
+  }
+  .summary-score {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 12px 0 18px;
+    padding: 14px;
+    border-radius: 10px;
+    text-align: center;
+  }
+  .summary-score.good { background: #f0fdf4; color: #15803d; }
+  .summary-score.mid { background: #fffbeb; color: #b45309; }
+  .summary-score.low { background: #fef2f2; color: #b91c1c; }
+  .summary-list { list-style: none; padding: 0; margin: 0; }
+  .summary-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    font-size: 15px;
+  }
+  .summary-list li.ok { background: #f0fdf4; }
+  .summary-list li.bad { background: #fef2f2; }
+  .summary-list .icon { font-size: 18px; }
+  .summary-list .bad-detail { color: #b91c1c; font-size: 13px; margin-left: auto; }
+  .summary-list li.ok .bad-detail { color: #15803d; }
+  .restart-btn {
+    margin-top: 18px;
+    background: #64748b;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .restart-btn:hover { background: #475569; }
+  .hint-box {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: #1e3a8a;
+  }
+  .hint-box b { color: #1e40af; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Задачи на «в … раз» и «на … больше/меньше»</h1>
+  <p class="subtitle">Введи ответ в поле и нажми «Проверить». В конце — итоги.</p>
+
+  <div class="hint-box">
+    <b>Шпаргалка:</b> «в 3 раза больше» → × 3 &nbsp;|&nbsp; «в 3 раза меньше» → ÷ 3 &nbsp;|&nbsp;
+    «на 5 больше» → + 5 &nbsp;|&nbsp; «на 5 меньше» → − 5 &nbsp;|&nbsp;
+    «во сколько раз больше?» → большее ÷ меньшее &nbsp;|&nbsp; «на сколько больше?» → большее − меньшее.
+    <br>Ответ можно писать числом (например, <b>2,4</b> или <b>2.4</b>) или с пояснением (например, <b>12 кг</b>).
+  </div>
+
+  <div id="tasks"></div>
+
+  <button class="finish-btn" id="finishBtn">Показать итоги</button>
+
+  <div class="summary" id="summary">
+    <h2>Итоги</h2>
+    <div class="summary-score" id="summaryScore"></div>
+    <ul class="summary-list" id="summaryList"></ul>
+    <button class="restart-btn" id="restartBtn">Пройти заново</button>
+  </div>
+</div>
+
+<script>
+/* ===================== ДАННЫЕ ЗАДАЧ ===================== */
+/* answers: массив допустимых числовых ответов (проверяется с допуском).
+   solution: текст решения с пояснением.
+   unit: подсказка единиц (не обязательна). */
+const tasks = [
+  {
+    text: "В первом ящике 18 кг яблок. Во втором — в 3 раза меньше, чем в первом. На сколько кг яблок в первом ящике больше, чем во втором?",
+    answers: [12],
+    solution: "1) Во втором ящике: 18 ÷ 3 = 6 кг.\n2) Разница: 18 − 6 = 12 кг.\nОтвет: на 12 кг больше."
+  },
+  {
+    text: "Один отрезок 9 см, второй — на 4 см длиннее. Во сколько раз второй отрезок длиннее первого?",
+    answers: [13/9],
+    solution: "1) Второй отрезок: 9 + 4 = 13 см.\n2) Во сколько раз длиннее: 13 ÷ 9 = 13/9 ≈ 1,44 раза.\nОтвет: в 13/9 раза (≈ 1,44)."
+  },
+  {
+    text: "У Коли 24 марки, а у Саши — в 4 раза меньше. На сколько марок у Коли больше, чем у Саши?",
+    answers: [18],
+    solution: "1) У Саши: 24 ÷ 4 = 6 марок.\n2) Разница: 24 − 6 = 18 марок.\nОтвет: на 18 марок."
+  },
+  {
+    text: "В первой коробке 7 карандашей, во второй — в 5 раз больше. На сколько карандашей во второй коробке больше, чем в первой?",
+    answers: [28],
+    solution: "1) Во второй коробке: 7 × 5 = 35 карандашей.\n2) Разница: 35 − 7 = 28 карандашей.\nОтвет: на 28 карандашей."
+  },
+  {
+    text: "Во втором ящике 15 кг груш, это в 3 раза больше, чем в первом. Сколько кг груш в первом ящике? На сколько кг во втором больше?",
+    answers: [10],
+    solution: "1) В первом ящике: 15 ÷ 3 = 5 кг.\n2) Разница: 15 − 5 = 10 кг.\nОтвет: в первом 5 кг; во втором на 10 кг больше."
+  },
+  {
+    text: "После того как со склада увезли 12 мешков, осталось на 5 мешков меньше, чем увезли. Сколько мешков было на складе сначала?",
+    answers: [19],
+    solution: "1) Осталось: 12 − 5 = 7 мешков.\n2) Было сначала: 12 + 7 = 19 мешков.\nОтвет: 19 мешков."
+  },
+  {
+    text: "Вторая бригада собрала 48 кг ягод — это на 16 кг больше, чем первая. Сколько собрала первая бригада? Во сколько раз вторая собрала больше первой?",
+    answers: [1.5, 3/2],
+    solution: "1) Первая бригада: 48 − 16 = 32 кг.\n2) Во сколько раз больше: 48 ÷ 32 = 1,5 раза.\nОтвет: первая собрала 32 кг; вторая — в 1,5 раза больше."
+  },
+  {
+    text: "Число A в 6 раз больше числа B. Число B на 25 меньше числа A. Найди оба числа. (В ответ впиши число A)",
+    answers: [30],
+    solution: "A = 6B и A − B = 25.\nПодставим: 6B − B = 25 → 5B = 25 → B = 5.\nТогда A = 6 × 5 = 30.\nОтвет: A = 30, B = 5."
+  },
+  {
+    text: "У Пети 8 конфет. У Васи — в 3 раза больше, чем у Пети. У Миши — на 6 конфет меньше, чем у Васи. Сколько конфет у Миши? На сколько у Миши больше, чем у Пети?",
+    answers: [12],
+    solution: "1) У Васи: 8 × 3 = 24 конфеты.\n2) У Миши: 24 − 6 = 18 конфет.\n3) У Миши больше, чем у Пети: 18 − 8 = 10 конфет.\nОтвет: у Миши 18 конфет; на 10 больше, чем у Пети."
+  },
+  {
+    text: "Первый день турист прошёл 12 км. Во второй — в 2 раза больше, чем в первый. В третий — на 7 км меньше, чем во второй. Сколько км прошёл турист за три дня?",
+    answers: [41],
+    solution: "1) Второй день: 12 × 2 = 24 км.\n2) Третий день: 24 − 7 = 17 км.\n3) Всего: 12 + 24 + 17 = 53 км.\nОтвет: 53 км."
+  },
+  {
+    text: "В первом цехе 30 рабочих. Во втором — в 2 раза меньше, чем в первом. В третьем — на 8 рабочих больше, чем во втором. Сколько рабочих в трёх цехах вместе?",
+    answers: [53],
+    solution: "1) Во втором цехе: 30 ÷ 2 = 15 рабочих.\n2) В третьем: 15 + 8 = 23 рабочих.\n3) Всего: 30 + 15 + 23 = 68 рабочих.\nОтвет: 68 рабочих."
+  },
+  {
+    text: "Одна сторона треугольника 6 см. Вторая — в 3 раза больше первой. Третья — на 4 см меньше второй. Найди периметр треугольника.",
+    answers: [32],
+    solution: "1) Вторая сторона: 6 × 3 = 18 см.\n2) Третья: 18 − 4 = 14 см.\n3) Периметр: 6 + 18 + 14 = 38 см.\nОтвет: 38 см."
+  },
+  {
+    text: "Книга стоит 420 рублей. Тетрадь — в 7 раз дешевле книги. Альбом — на 35 рублей дороже тетради. Сколько стоят книга, тетрадь и альбом вместе?",
+    answers: [515],
+    solution: "1) Тетрадь: 420 ÷ 7 = 60 руб.\n2) Альбом: 60 + 35 = 95 руб.\n3) Вместе: 420 + 60 + 95 = 575 руб.\nОтвет: 575 рублей."
+  },
+  {
+    text: "В магазин привезли 96 кг картофеля. В первый день продали в 4 раза меньше, чем привезли. Во второй день — на 9 кг больше, чем в первый. Сколько кг картофеля осталось?",
+    answers: [51],
+    solution: "1) Первый день: 96 ÷ 4 = 24 кг.\n2) Второй день: 24 + 9 = 33 кг.\n3) Продали всего: 24 + 33 = 57 кг.\n4) Осталось: 96 − 57 = 39 кг.\nОтвет: 39 кг."
+  },
+  {
+    text: "Один рабочий делает 16 деталей в час. Второй — в 2 раза меньше. Третий — на 3 детали больше, чем второй. Сколько деталей сделают все трое за 1 час?",
+    answers: [27],
+    solution: "1) Второй: 16 ÷ 2 = 8 деталей.\n2) Третий: 8 + 3 = 11 деталей.\n3) Всего: 16 + 8 + 11 = 35 деталей.\nОтвет: 35 деталей."
+  },
+  {
+    text: "У фермера 45 кур. Уток — в 5 раз меньше, чем кур. Гусей — на 6 больше, чем уток. На сколько гусей меньше, чем кур?",
+    answers: [30],
+    solution: "1) Уток: 45 ÷ 5 = 9.\n2) Гусей: 9 + 6 = 15.\n3) Кур больше, чем гусей: 45 − 15 = 30.\nОтвет: гусей на 30 меньше, чем кур."
+  },
+  {
+    text: "В первой вазе 14 роз. Во второй — на 6 роз меньше, чем в первой. В третьей — в 2 раза больше, чем во второй. Сколько роз в третьей вазе? На сколько в третьей больше, чем в первой?",
+    answers: [16],
+    solution: "1) Вторая ваза: 14 − 6 = 8 роз.\n2) Третья: 8 × 2 = 16 роз.\n3) В третьей больше, чем в первой: 16 − 14 = 2 розы.\nОтвет: в третьей 16 роз; на 2 больше, чем в первой."
+  },
+  {
+    text: "Скорость лодки 18 км/ч. Скорость течения — в 6 раз меньше. Найди скорость лодки против течения. (Ответ — скорость против течения, км/ч)",
+    answers: [15],
+    solution: "1) Течение: 18 ÷ 6 = 3 км/ч.\n2) По течению: 18 + 3 = 21 км/ч.\n3) Против течения: 18 − 3 = 15 км/ч.\nОтвет: против течения 15 км/ч."
+  },
+  {
+    text: "В одном мешке 40 кг сахара. Во втором — в 4 раза меньше. Из второго мешка отсыпали 3 кг. Во сколько раз теперь в первом мешке больше сахара, чем во втором?",
+    answers: [40/7],
+    solution: "1) Второй мешок: 40 ÷ 4 = 10 кг.\n2) После того как отсыпали: 10 − 3 = 7 кг.\n3) Во сколько раз больше: 40 ÷ 7 = 40/7 ≈ 5,71 раза.\nОтвет: в 40/7 раза (≈ 5,71)."
+  },
+  {
+    text: "Мама испекла 36 пирожков. С мясом — в 3 раза меньше, чем всего. С капустой — на 4 больше, чем с мясом. Остальные — с яблоками. Сколько пирожков с яблоками?",
+    answers: [8],
+    solution: "1) С мясом: 36 ÷ 3 = 12 пирожков.\n2) С капустой: 12 + 4 = 16 пирожков.\n3) С яблоками: 36 − 12 − 16 = 8 пирожков.\nОтвет: 8 пирожков."
+  }
+];
+
+/* ===================== ЛОГИКА ===================== */
+const tasksContainer = document.getElementById('tasks');
+const finishBtn = document.getElementById('finishBtn');
+const summaryEl = document.getElementById('summary');
+const summaryScore = document.getElementById('summaryScore');
+const summaryList = document.getElementById('summaryList');
+const restartBtn = document.getElementById('restartBtn');
+
+const state = tasks.map(() => ({ checked: false, correct: false, userAnswer: '' }));
+
+/* Извлекаем число из строки: поддерживаем "2,4", "2.4", "12 кг", "13/9" */
+function parseAnswer(str) {
+  if (!str) return null;
+  let s = String(str).trim().replace(',', '.');
+  // дробь вида a/b
+  const frac = s.match(/^(-?\d+(?:\.\d+)?)\s*\/\s*(-?\d+(?:\.\d+)?)/);
+  if (frac) {
+    const a = parseFloat(frac[1]), b = parseFloat(frac[2]);
+    if (b !== 0) return a / b;
+  }
+  // первое число в строке
+  const num = s.match(/-?\d+(?:\.\d+)?/);
+  if (!num) return null;
+  return parseFloat(num[0]);
+}
+
+function isCorrect(userVal, answers) {
+  if (userVal === null || isNaN(userVal)) return false;
+  const tol = 0.01;
+  return answers.some(a => Math.abs(userVal - a) <= tol);
+}
+
+function renderTasks() {
+  tasksContainer.innerHTML = '';
+  tasks.forEach((task, i) => {
+    const div = document.createElement('div');
+    div.className = 'task';
+    div.id = 'task-' + i;
+    div.innerHTML = `
+      <div class="task-header">
+        <div class="task-num">${i + 1}</div>
+        <div class="task-text">${task.text}</div>
+      </div>
+      <div class="answer-row">
+        <label>Ответ:</label>
+        <input type="text" id="input-${i}" placeholder="Введи число..." autocomplete="off">
+        <button class="check-btn" id="btn-${i}">Проверить</button>
+      </div>
+      <div class="result" id="result-${i}"></div>
+    `;
+    tasksContainer.appendChild(div);
+  });
+
+  tasks.forEach((task, i) => {
+    const btn = document.getElementById('btn-' + i);
+    const input = document.getElementById('input-' + i);
+    btn.addEventListener('click', () => checkTask(i));
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') checkTask(i);
+    });
+  });
+}
+
+function checkTask(i) {
+  if (state[i].checked) return;
+  const input = document.getElementById('input-' + i);
+  const btn = document.getElementById('btn-' + i);
+  const resultEl = document.getElementById('result-' + i);
+  const taskEl = document.getElementById('task-' + i);
+  const userRaw = input.value.trim();
+  const userVal = parseAnswer(userRaw);
+  const ok = isCorrect(userVal, tasks[i].answers);
+
+  state[i].checked = true;
+  state[i].correct = ok;
+  state[i].userAnswer = userRaw;
+
+  input.disabled = true;
+  btn.disabled = true;
+
+  taskEl.classList.add(ok ? 'correct' : 'wrong');
+  resultEl.classList.add('show', ok ? 'ok' : 'bad');
+
+  const verdict = ok
+    ? '✅ Верно!'
+    : (userRaw === '' ? '❌ Ответ не введён.' : '❌ Неверно. Твой ответ: ' + userRaw);
+
+  resultEl.innerHTML = `
+    <span class="verdict">${verdict}</span>
+    <div class="solution"><b>Решение:</b>\n${tasks[i].solution}</div>
+  `;
+}
+
+finishBtn.addEventListener('click', () => {
+  // Проверяем всё, что ещё не проверено
+  tasks.forEach((_, i) => {
+    if (!state[i].checked) {
+      // если ответ введён — проверим; если нет — засчитаем как неверно
+      const input = document.getElementById('input-' + i);
+      if (input.value.trim() !== '') {
+        checkTask(i);
+      } else {
+        state[i].checked = true;
+        state[i].correct = false;
+        state[i].userAnswer = '';
+        const taskEl = document.getElementById('task-' + i);
+        const resultEl = document.getElementById('result-' + i);
+        const btn = document.getElementById('btn-' + i);
+        input.disabled = true;
+        btn.disabled = true;
+        taskEl.classList.add('wrong');
+        resultEl.classList.add('show', 'bad');
+        resultEl.innerHTML = `
+          <span class="verdict">❌ Ответ не введён.</span>
+          <div class="solution"><b>Решение:</b>\n${tasks[i].solution}</div>
+        `;
+      }
+    }
+  });
+
+  showSummary();
+});
+
+function showSummary() {
+  const total = tasks.length;
+  const correctCount = state.filter(s => s.correct).length;
+  const percent = Math.round((correctCount / total) * 100);
+
+  let cls = 'low';
+  let emoji = '😟';
+  let msg = 'Нужно ещё потренироваться.';
+  if (percent >= 85) { cls = 'good'; emoji = '🎉'; msg = 'Отличный результат!'; }
+  else if (percent >= 60) { cls = 'mid'; emoji = '👍'; msg = 'Хорошо, но есть над чем поработать.'; }
+
+  summaryScore.className = 'summary-score ' + cls;
+  summaryScore.innerHTML = `${emoji} ${correctCount} из ${total} верно (${percent}%)<br><span style="font-size:15px;font-weight:400;">${msg}</span>`;
+
+  summaryList.innerHTML = '';
+  tasks.forEach((task, i) => {
+    const li = document.createElement('li');
+    li.className = state[i].correct ? 'ok' : 'bad';
+    const icon = state[i].correct ? '✅' : '❌';
+    const detail = state[i].correct
+      ? 'верно'
+      : (state[i].userAnswer ? 'твой ответ: ' + state[i].userAnswer : 'нет ответа');
+    li.innerHTML = `
+      <span class="icon">${icon}</span>
+      <span>Задача ${i + 1}</span>
+      <span class="bad-detail">${detail}</span>
+    `;
+    summaryList.appendChild(li);
+  });
+
+  summaryEl.classList.add('show');
+  summaryEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+restartBtn.addEventListener('click', () => {
+  state.forEach((s, i) => {
+    s.checked = false;
+    s.correct = false;
+    s.userAnswer = '';
+  });
+  summaryEl.classList.remove('show');
+  renderTasks();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+/* Старт */
+renderTasks();
+</script>
+</body>
+</html>
